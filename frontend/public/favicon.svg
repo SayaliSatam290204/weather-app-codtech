@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Circle background -->
+  <circle cx="96" cy="96" r="96" fill="url(#bgGradient)"/>
+  
+  <!-- Cloud part 1 -->
+  <ellipse cx="70" cy="90" rx="28" ry="20" fill="#ffffff" opacity="0.9"/>
+  
+  <!-- Cloud part 2 -->
+  <ellipse cx="95" cy="85" rx="35" ry="25" fill="#ffffff" opacity="0.9"/>
+  
+  <!-- Cloud part 3 -->
+  <ellipse cx="120" cy="90" rx="28" ry="20" fill="#ffffff" opacity="0.9"/>
+  
+  <!-- Sun peeking from behind cloud -->
+  <circle cx="110" cy="75" r="18" fill="#FFD700" opacity="0.8"/>
+  
+  <!-- Rain drops -->
+  <line x1="75" y1="115" x2="75" y2="135" stroke="#87CEEB" stroke-width="3" stroke-linecap="round"/>
+  <line x1="95" y1="120" x2="95" y2="140" stroke="#87CEEB" stroke-width="3" stroke-linecap="round"/>
+  <line x1="115" y1="115" x2="115" y2="135" stroke="#87CEEB" stroke-width="3" stroke-linecap="round"/>
+</svg>

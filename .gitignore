@@ -1,0 +1,183 @@
+# ===============================================
+# WEATHER APP - Git Ignore Configuration
+# ===============================================
+# This file specifies which files and folders should NOT be committed to Git
+# 
+# PROJECT: CODTech Weather Application
+# DESCRIPTION: Full-stack weather app with React frontend and Node.js backend
+# TYPE: MERN Stack Application (MongoDB, Express, React, Node)
+# 
+# FEATURES:
+# - Real-time weather data from OpenWeather API
+# - Search by city name or GPS geolocation
+# - 5-day weather forecast
+# - Save favorite cities
+# - Search history tracking
+# - Dark/Light theme toggle
+# - Temperature unit conversion (°C / °F)
+# 
+# ARCHITECTURE:
+# - Backend: Express.js server with MongoDB database
+# - Frontend: React.js SPA with responsive CSS
+# - API: RESTful endpoints for weather, favorites, and history
+# - Database: MongoDB for persisting user data
+
+# =========================================
+# DEPENDENCIES & NODE MODULES
+# =========================================
+# Dependencies should be installed via npm/yarn, not committed
+node_modules/
+package-lock.json
+yarn.lock
+
+# =========================================
+# ENVIRONMENT VARIABLES
+# =========================================
+# Never commit .env files - they contain sensitive information
+# (API keys, database URIs, database passwords, etc.)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# =========================================
+# BUILD OUTPUT
+# =========================================
+# Compiled and bundled files should not be committed
+build/
+dist/
+.next/
+out/
+
+# Frontend build directory (Create React App)
+frontend/build/
+
+# =========================================
+# IDE & EDITOR ARTIFACTS
+# =========================================
+# VS Code
+.vscode/
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+*.code-workspace
+
+# JetBrains IDEs (IntelliJ, WebStorm, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# vim/vi
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# =========================================
+# LOG FILES
+# =========================================
+# Application logs should not be committed
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# =========================================
+# OS SPECIFIC FILES
+# =========================================
+# Operating system generated files
+.directory
+.Spotlight-V100
+.Trashes
+
+# =========================================
+# TEMPORARY & CACHE FILES
+# =========================================
+.cache/
+.tmp/
+temp/
+tmp/
+*.tmp
+*.bak
+
+# =========================================
+# DATABASE BACKUPS & DUMPS
+# =========================================
+# MongoDB backups and dumps
+*.dump
+*.bak
+data/
+db/
+mongo_backup/
+
+# =========================================
+# TESTING
+# =========================================
+# Test coverage reports should not be committed
+coverage/
+.nyc_output/
+*.lcov
+.jest_cache/
+
+# =========================================
+# MISCELLANEOUS & DOCUMENTATION
+# =========================================
+# Keep main documentation, remove temporary docs
+CLEANUP_REPORT.md
+*.zip
+*.tar
+*.tar.gz
+.DS_Store
+
+# =========================================
+# PROJECT SPECIFIC
+# =========================================
+# Frontend dist
+frontend/node_modules/
+frontend/.env.local
+
+# Backend specific
+backend/node_modules/
+backend/.env
+backend/logs/
+
+# =========================================
+# DEPLOYMENT FILES
+# =========================================
+# Vercel
+.vercel/
+
+# Heroku
+.env.production
+Procfile.local
+
+# =========================================
+# NOTES
+# =========================================
+# To use this .gitignore:
+# 1. Ensure important credentials are in .env files (not committed)
+# 2. Create .env.example with template variables
+# 3. Always check git status before committing
+# 4. Use 'git check-ignore -v <file>' to verify ignored files
+#
+# Example .env template:
+# REACT_APP_API_URL=http://localhost:5000/api
+# OPENWEATHER_API_KEY=your_api_key_here
+# MONGODB_URI=mongodb://localhost:27017/weatherdb
+# PORT=5000
