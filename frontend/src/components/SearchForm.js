@@ -1,113 +1,104 @@
-/**
- * ===============================================
- * SearchForm Component
- * ===============================================
- * Input form for searching weather by city name
- * Includes geolocation button for GPS-based weather
- * 
- * FEATURES:
- * ✓ City name text input
- * ✓ Search button with loading state
- * ✓ Geolocation button (gets weather for current GPS location)
- * ✓ Error handling for geolocation access
- */
+// src/components/SearchForm.js
+// Component for city search input and geolocation button
 
 import React, { useState } from 'react';
 
 /**
  * SearchForm Component
- * @param {Function} onSearch - Callback function when search is performed
- * @param {boolean} loading - Whether API request is in progress
- * @param {string} currentCity - Currently displayed city name
+ * Renders the search input and "My Location" button.
+ * 
+ * @param {Function} onSearch - Callback to parent App.js with search query
+ * @param {boolean} loading - Loading state to disable inputs during API calls
+ * @param {string} currentCity - Name of the currently displayed city
+ * @param {string} units - Current temperature unit ('metric' or 'imperial')
  */
-const SearchForm = ({ onSearch, loading, currentCity }) => {
-  // ========== STATE ==========
-  // Stores the text input value for city search
+const SearchForm = ({ onSearch, loading, currentCity, units }) => {
+  // Local state for the text input field
   const [city, setCity] = useState('');
 
   /**
-   * ========== FORM SUBMISSION HANDLER ==========
-   * Triggered when user clicks search button or presses Enter
-   * Validates input and calls parent's onSearch callback
+   * Handles form submission (Enter key or Search button)
+   * Prevents default page reload and triggers search if input is valid
    */
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent page reload
-    
-    // Only search if input is not empty
+    e.preventDefault();
     if (city.trim()) {
-      onSearch(city.trim());
-      setCity(''); // Clear input after search
+      onSearch(city.trim()); // Send city name to parent
+      setCity(''); // Clear input field after search
     }
   };
 
   /**
-   * ========== GEOLOCATION HANDLER ==========
-   * Gets user's current location and fetches weather
-   * Handles geolocation permission errors gracefully
+   * ✅ CHROME-OPTIMIZED GEOLOCATION HANDLER
+   * Uses the browser's Geolocation API to get GPS coordinates.
+   * Includes specific options for better accuracy in Chrome.
    */
   const getCurrentLocation = () => {
-    // Check if browser supports geolocation API
+    // Check if browser supports Geolocation
     if (!navigator.geolocation) {
-      alert('Geolocation not supported in your browser');
+      alert('❌ Geolocation not supported. Use Chrome/Edge/Firefox');
       return;
     }
 
-    // Request user's current GPS coordinates
+    // Options for getCurrentPosition
+    const geoOptions = {
+      enableHighAccuracy: true, // Request best possible accuracy (GPS)
+      timeout: 15000,           // Wait max 15 seconds for location
+      maximumAge: 300000        // Accept cached position up to 5 minutes old
+    };
+
+    // Request current position
     navigator.geolocation.getCurrentPosition(
       async (position) => {
-        // Success callback - received coordinates
+        // Success callback: Destructure coords from position object
         const { latitude, longitude } = position.coords;
-        // Pass coordinates to parent component for API call
-        onSearch(`current?lat=${latitude}&lon=${longitude}`);
+        
+        // Pass special query string to parent's fetchWeather function
+        // Format: current?lat=...&lon=...&units=...
+        onSearch(`current?lat=${latitude}&lon=${longitude}&units=${units || 'metric'}`);
       },
       (error) => {
-        // Error callback - handle different error types
-        let message = 'Location error: ';
+        // Error callback: Handle various error codes
+        let message = 'Location Error:\n\n';
         switch(error.code) {
           case error.PERMISSION_DENIED:
-            message += 'Location access denied';
+            message += '🚫 Permission denied. Go to Chrome Settings → Site Settings → Location → Allow localhost:3000';
             break;
           case error.POSITION_UNAVAILABLE:
-            message += 'Location unavailable';
+            message += '📍 Location unavailable. Enable GPS/WiFi';
+            break;
+          case error.TIMEOUT:
+            message += '⏰ Location timeout. Try again';
             break;
           default:
-            message += 'Unknown error';
+            message += '❓ Unknown error';
         }
-        alert(message);
+        alert(message); // Show user-friendly error message
       },
-      { 
-        enableHighAccuracy: true, // Request high precision GPS
-        timeout: 10000,           // Timeout after 10 seconds
-        maximumAge: 60000         // Cache location for 1 minute
-      }
+      geoOptions
     );
   };
 
-  // ========== RENDER ==========
   return (
     <section className="search-section">
-      {/* City search form */}
+      {/* City Search Form */}
       <form onSubmit={handleSubmit} className="search-form">
         <div className="input-group">
           <input
             type="text"
-            placeholder="Enter city (Mumbai, Karad) or click 📍 My Location"
+            placeholder="Enter city (Mumbai, Karad) or click 📍"
             value={city}
             onChange={(e) => setCity(e.target.value)}
             className="city-input"
-            disabled={loading} // Disable input while loading
+            disabled={loading} // Disable while fetching weather
           />
-          <button 
-            type="submit" 
-            className="search-btn" 
-            disabled={loading}
-          >
+          <button type="submit" className="search-btn" disabled={loading}>
             {loading ? '🔄 Searching...' : '🌤️ Search'}
           </button>
         </div>
       </form>
 
-      {/* Geolocation button */}
+      {/* Geolocation Button Section */}
       <div className="location-buttons">
         <button 
           onClick={getCurrentLocation} 
@@ -117,11 +108,13 @@ const SearchForm = ({ onSearch, loading, currentCity }) => {
         >
           📍 My Location
         </button>
+        {/* Helper text for Chrome users needing to enable permissions */}
+        <small className="geo-hint">Chrome: Click → Allow location access</small>
       </div>
 
-      {/* Display currently viewed city */}
+      {/* Current City Indicator */}
       {currentCity && (
-        <p className="current-city">Current: {currentCity}</p>
+        <p className="current-city">📍 {currentCity}</p>
       )}
     </section>
   );

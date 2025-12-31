@@ -115,12 +115,13 @@ body.dark {
 /* Location Buttons */
 .location-buttons {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  gap: 5px;
   margin-top: 15px;
 }
 
 .geo-btn {
-  flex: 1;
+  width: 100%;
   padding: 12px 20px;
   background: linear-gradient(135deg, var(--accent-green) 0%, #38ef7d 100%);
   color: white;
@@ -135,6 +136,12 @@ body.dark {
 .geo-btn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: var(--shadow-hover);
+}
+
+.geo-hint {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: center;
 }
 
 /* Weather Display */
@@ -467,6 +474,10 @@ body.dark .city-input::placeholder {
   color: rgba(255,255,255,0.6);
 }
 
+body.dark .geo-hint {
+  color: rgba(255,255,255,0.6);
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .App {
@@ -488,8 +499,7 @@ body.dark .city-input::placeholder {
     font-size: 3rem;
   }
   
-  .search-form,
-  .location-buttons {
+  .search-form {
     flex-direction: column;
   }
   

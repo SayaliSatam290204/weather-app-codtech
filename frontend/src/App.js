@@ -80,9 +80,14 @@ function App() {
     try {
       // Handle both city names and geolocation queries with units
       // Format: city name or "current?lat=X&lon=Y"
-      const endpoint = query.includes('?') || query.includes('current')
-        ? `/weather/${query}&units=${units}`
-        : `/weather/${query}?units=${units}`;
+      let endpoint;
+      if (query.includes('current')) {
+        // Geolocation query: current?lat=X&lon=Y
+        endpoint = `/weather/${query}&units=${units}`;
+      } else {
+        // City name query
+        endpoint = `/weather/${query}?units=${units}`;
+      }
       
       // Make API request to backend
       const res = await fetch(`${API_URL}${endpoint}`);
@@ -227,7 +232,6 @@ function App() {
     <div className={`App ${theme}`}>
       <header className="app-header">
         <h1>🌤️ Ultimate Weather App</h1>
-        <p>CODTech Task-2 | All Features Complete</p>
         <div className="controls">
           <button 
             onClick={() => setUnits(units === 'metric' ? 'imperial' : 'metric')}

@@ -28,8 +28,8 @@ import React, { useState } from 'react';
  */
 const FavoritesList = ({ favorites, onCityClick, onToggleFavorite }) => {
   // ========== STATE ==========
-  // Track loading state during delete operation
-  const [loading, setLoading] = useState(false);
+  // Track which favorite is being deleted (null = none, or favorite.id)
+  const [loadingId, setLoadingId] = useState(null);
 
   // ========== EMPTY STATE ==========
   // Show empty message if no favorites saved
@@ -55,19 +55,28 @@ const FavoritesList = ({ favorites, onCityClick, onToggleFavorite }) => {
    */
   const handleToggleFavorite = async (id, e) => {
     e.stopPropagation(); // Prevent triggering city click event
-    setLoading(true);
+    setLoadingId(id); // Mark this specific favorite as loading
     
     try {
       // Make DELETE request to backend API
-      await fetch(`${process.env.REACT_APP_API_URL}/weather/favorites/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/weather/favorites/${id}`, {
         method: 'DELETE'
       });
-      // Refresh favorites list after deletion
-      onToggleFavorite(id);
+      
+      const data = await response.json();
+      
+      // Check if deletion was successful
+      if (data.success) {
+        // Refresh favorites list after deletion
+        onToggleFavorite(id);
+      } else {
+        alert(data.message || 'Failed to remove favorite');
+        setLoadingId(null); // Clear loading on error
+      }
     } catch (error) {
       console.error('Favorite remove failed:', error);
-    } finally {
-      setLoading(false);
+      alert('Error removing favorite');
+      setLoadingId(null); // Clear loading on error
     }
   };
 
@@ -116,10 +125,10 @@ const FavoritesList = ({ favorites, onCityClick, onToggleFavorite }) => {
             <button 
               className="heart-btn"
               onClick={(e) => handleToggleFavorite(favorite.id, e)}
-              disabled={loading}
+              disabled={loadingId === favorite.id}
               title="Remove from favorites"
             >
-              {loading ? '⏳' : '❤️'}
+              {loadingId === favorite.id ? '⏳' : '❤️'}
             </button>
           </div>
         ))}

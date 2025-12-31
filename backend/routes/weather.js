@@ -15,8 +15,11 @@ const controller = require('../controllers/weatherController');
 const createWeatherRoutes = (dbClient) => {
   const router = require('express').Router();
   
+  // Apply JSON body parser to all POST requests
+  router.use(require('express').json());
+  
   /**
-   * ========== SEARCH HISTORY ENDPOINTS ==========
+   * ========== SPECIFIC ROUTES FIRST (before generic :id/:city routes) ==========
    */
   
   // GET /api/weather/history
@@ -27,25 +30,17 @@ const createWeatherRoutes = (dbClient) => {
   // Clears all search history records from database
   router.delete('/history', (req, res) => controller.clearHistory(req, res, dbClient));
   
-  /**
-   * ========== FAVORITES ENDPOINTS ==========
-   */
-  
   // GET /api/weather/favorites
   // Returns all favorite cities saved by user
   router.get('/favorites', (req, res) => controller.getFavorites(req, res, dbClient));
   
   // POST /api/weather/favorites
   // Adds a new city to favorites list
-  router.post('/favorites', require('express').json(), (req, res) => controller.addFavorite(req, res, dbClient));
+  router.post('/favorites', (req, res) => controller.addFavorite(req, res, dbClient));
   
   // DELETE /api/weather/favorites/:id
-  // Removes a favorite city by ID
+  // Removes a favorite city by ID (MUST be before /:city route)
   router.delete('/favorites/:id', (req, res) => controller.removeFavorite(req, res, dbClient));
-  
-  /**
-   * ========== WEATHER DATA ENDPOINTS ==========
-   */
   
   // GET /api/weather/current?lat=X&lon=Y
   // Gets weather for a specific latitude and longitude
@@ -53,8 +48,12 @@ const createWeatherRoutes = (dbClient) => {
   router.get('/current', (req, res) => controller.getCurrentLocation(req, res, dbClient));
   
   // GET /api/weather/forecast/:city
-  // Gets 5-day forecast for a specified city
+  // Gets 5-day forecast for a specified city (MUST be before /:city route)
   router.get('/forecast/:city', (req, res) => controller.getForecast(req, res, dbClient));
+  
+  /**
+   * ========== GENERIC ROUTE LAST (catches everything else) ==========
+   */
   
   // GET /api/weather/:city
   // Gets current weather for a specified city
