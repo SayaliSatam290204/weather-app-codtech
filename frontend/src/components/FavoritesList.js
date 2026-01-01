@@ -23,10 +23,11 @@ import React, { useState } from 'react';
  * @param {number} favorites[].temperature - Current temperature
  * @param {string} favorites[].description - Weather description
  * @param {string} favorites[].iconUrl - URL to weather icon
+ * @param {string} units - Temperature units: 'metric' (°C) or 'imperial' (°F)
  * @param {Function} onCityClick - Callback when favorite city is clicked
  * @param {Function} onToggleFavorite - Callback to refresh list after removal
  */
-const FavoritesList = ({ favorites, onCityClick, onToggleFavorite }) => {
+const FavoritesList = ({ favorites, onCityClick, onToggleFavorite, units = 'metric' }) => {
   // ========== STATE ==========
   // Track which favorite is being deleted (null = none, or favorite.id)
   const [loadingId, setLoadingId] = useState(null);
@@ -112,8 +113,8 @@ const FavoritesList = ({ favorites, onCityClick, onToggleFavorite }) => {
               {/* City name */}
               <h4 className="fav-city">{favorite.city}</h4>
               
-              {/* Current temperature */}
-              <p className="fav-temp">{favorite.temperature}°</p>
+              {/* Current temperature with proper unit */}
+              <p className="fav-temp">{favorite.temperature}°{units === 'metric' ? 'C' : 'F'}</p>
               
               {/* Weather description */}
               {favorite.description && (

@@ -42,6 +42,10 @@ const createWeatherRoutes = (dbClient) => {
   // Removes a favorite city by ID (MUST be before /:city route)
   router.delete('/favorites/:id', (req, res) => controller.removeFavorite(req, res, dbClient));
   
+  // DELETE /api/weather/clear-all
+  // Clears all data from database (for testing/debugging)
+  router.delete('/clear-all', (req, res) => controller.clearAllData(req, res, dbClient));
+  
   // GET /api/weather/current?lat=X&lon=Y
   // Gets weather for a specific latitude and longitude
   // Used for geolocation-based weather queries

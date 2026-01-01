@@ -54,8 +54,8 @@ const SearchForm = ({ onSearch, loading, currentCity, units }) => {
         const { latitude, longitude } = position.coords;
         
         // Pass special query string to parent's fetchWeather function
-        // Format: current?lat=...&lon=...&units=...
-        onSearch(`current?lat=${latitude}&lon=${longitude}&units=${units || 'metric'}`);
+        // Format: current?lat=...&lon=...
+        onSearch(`current?lat=${latitude}&lon=${longitude}`);
       },
       (error) => {
         // Error callback: Handle various error codes

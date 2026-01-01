@@ -130,19 +130,25 @@ const getForecast = async (req, res, dbClient) => {
 // Get all favorite cities
 const getFavorites = async (req, res, dbClient) => {
   try {
+    const { units = 'metric' } = req.query; // Get units from query parameter
     // Fetch all documents from 'favorites' collection
     const favorites = await dbClient.db('weatherdb').collection('favorites').find({}).toArray();
     
     console.log('Retrieved favorites:', favorites.length);
     console.log('Favorite IDs:', favorites.map(f => f._id.toString()));
     
-    // Map _id to string 'id' for frontend React keys
-    const formattedFavorites = favorites.map(f => ({ 
-      ...f, 
-      id: f._id.toString() // Convert ObjectId to string
-    }));
+    // Map _id to string 'id' for frontend React keys and format temperature with units
+    const formattedFavorites = favorites.map(f => {
+      const unitSymbol = units === 'metric' ? '°C' : '°F';
+      return {
+        ...f, 
+        id: f._id.toString(), // Convert ObjectId to string
+        temperature: f.temperature, // Keep raw temp, display logic will add unit
+        iconUrl: f.icon ? `http://openweathermap.org/img/wn/${f.icon}@2x.png` : f.iconUrl
+      };
+    });
     
-    res.json({ success: true, favorites: formattedFavorites });
+    res.json({ success: true, favorites: formattedFavorites, units: units });
   } catch (error) { 
     console.error('Error fetching favorites:', error);
     handleError(res, error);
@@ -220,14 +226,15 @@ const removeFavorite = async (req, res, dbClient) => {
 // Get recent search history (Limit 10)
 const getSearchHistory = async (req, res, dbClient) => {
   try {
+    const { units = 'metric' } = req.query; // Get units from query parameter
     const history = await dbClient.db('weatherdb').collection('searchHistory')
       .find({})
       .sort({ timestamp: -1 }) // Sort by newest first
       .limit(10) // Limit to last 10 searches
       .toArray();
       
-    // Format using SearchHistory model helper
-    res.json({ success: true, history: history.map(h => new SearchHistory(h).toFrontend()) });
+    // Format using SearchHistory model helper, passing units parameter
+    res.json({ success: true, history: history.map(h => new SearchHistory(h).toFrontend(units)) });
   } catch (error) {
     console.error('Error fetching search history:', error);
     handleError(res, error);
@@ -273,9 +280,29 @@ const handleError = (res, error) => {
   res.status(500).json({ success: false, error: 'Server Error: ' + (error.message || 'Unknown error') });
 };
 
+// Clear all database collections (for testing/debugging)
+const clearAllData = async (req, res, dbClient) => {
+  try {
+    const db = dbClient.db('weatherdb');
+    const searchHistoryResult = await db.collection('searchHistory').deleteMany({});
+    const favoritesResult = await db.collection('favorites').deleteMany({});
+    
+    res.json({ 
+      success: true, 
+      message: 'Database cleared',
+      deleted: {
+        searchHistory: searchHistoryResult.deletedCount,
+        favorites: favoritesResult.deletedCount
+      }
+    });
+  } catch (error) {
+    handleError(res, error);
+  }
+};
+
 // Export all controller functions for use in routes
 module.exports = {
   getWeatherByCity, getCurrentLocation, getForecast,
   getFavorites, addFavorite, removeFavorite,
-  getSearchHistory, clearHistory
+  getSearchHistory, clearHistory, clearAllData
 };

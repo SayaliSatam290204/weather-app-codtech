@@ -136,7 +136,7 @@ function App() {
    */
   const fetchHistory = async () => {
     try {
-      const res = await fetch(`${API_URL}/weather/history`);
+      const res = await fetch(`${API_URL}/weather/history?units=${units}`);
       const data = await res.json();
       if (data.success) {
         setHistory(data.history);
@@ -152,7 +152,7 @@ function App() {
    */
   const fetchFavorites = async () => {
     try {
-      const res = await fetch(`${API_URL}/weather/favorites`);
+      const res = await fetch(`${API_URL}/weather/favorites?units=${units}`);
       const data = await res.json();
       if (data.success) {
         setFavorites(data.favorites || []);
@@ -280,6 +280,7 @@ function App() {
         {/* ⭐ Favorites Section */}
         <FavoritesList 
           favorites={favorites}
+          units={units}
           onCityClick={handleCityClick}
           onToggleFavorite={handleFavoriteRemove} // Refresh after remove
         />

@@ -125,13 +125,15 @@ class SearchHistory extends WeatherModel {
   /**
    * Formats historical search data for frontend display
    * Includes formatted timestamp and weather icon
+   * @param {string} units - Temperature units: 'metric' (°C) or 'imperial' (°F)
    * @returns {Object} Formatted history item for UI
    */
-  toFrontend() {
+  toFrontend(units = 'metric') {
+    const unitSymbol = units === 'metric' ? '°C' : '°F';
     return {
       id: this._id?.toString(),
       city: this.city,
-      temperature: `${this.temperature}°C`,
+      temperature: `${this.temperature}${unitSymbol}`,
       description: this.description.charAt(0).toUpperCase() + this.description.slice(1),
       iconUrl: `http://openweathermap.org/img/wn/${this.icon}@2x.png`,
       time: this.timestamp.toLocaleString('en-IN', {
