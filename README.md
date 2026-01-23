@@ -1,3 +1,18 @@
+#weather-app-codtech
+
+COMPANY: CODTECH IT SOLUTIONS
+
+NAME: SAYALI SURYAKANT SATAM
+
+INTERN ID: CTIS1140
+
+DOMAIN: MERN STACK WEB DEVELOPEMENT
+
+DURATION: 6
+
+MENTOR: NEELA SANTOSH
+
+
 # Weather App (Codtech)
 
 A simple full-stack weather application with a Node.js backend and a React frontend.
