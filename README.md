@@ -111,4 +111,6 @@ This project does not include a license file. Add a `LICENSE` if you plan to pub
 
 ---
 
-If you want, I can update the `README.md` with project-specific screenshots, API examples, or CI/deploy instructions. Tell me which you'd like next.
+<img width="1919" height="985" alt="Image" src="https://github.com/user-attachments/assets/e69050d3-2c05-42ea-a01f-c49b8e52668b" />
+
+<img width="1919" height="1079" alt="Image" src="https://github.com/user-attachments/assets/f6244807-ba94-4bfb-a0a5-32f9f2984c50" />
